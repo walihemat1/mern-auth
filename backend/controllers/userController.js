@@ -125,10 +125,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-const updateUserPassword = asyncHandler(async (req, res) => {
-  const newPassword = req.body.password;
-});
-
 export {
   authUser,
   registerUser,
