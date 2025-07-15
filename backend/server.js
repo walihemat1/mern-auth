@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -18,6 +19,9 @@ app.use(express.json());
 
 // urlencoded will allow us to send form data
 app.use(express.urlencoded({ extended: true }));
+
+// this will parse the cookie
+app.use(cookieParser());
 
 app.use("/api/users", userRoutes);
 

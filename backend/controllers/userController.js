@@ -15,21 +15,18 @@ const authUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  if (user) {
-    if (User.matchPasswords(enteredPassword)) {
-      generateToken(res, user._userId);
+  if (user && (await user.matchPassword(password))) {
+    generateToken(res, user._id);
 
-      res.status(200).json({
-        status: "sucess",
-        mesage: "User authenticated!",
-        data: { id: user._userId, name: user.name, email: user.email },
-      });
-    } else {
-    }
+    res.status(200).json({
+      status: "sucess",
+      mesage: "User authenticated!",
+      data: { id: user._userId, name: user.name, email: user.email },
+    });
   } else {
+    res.status(400);
+    throw new Error("Invalid email or password!");
   }
-
-  res.status(200).json({ message: "Auth User" });
 });
 
 // @desc    Register a new user
@@ -54,7 +51,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (user) {
     // generate token
-    generateToken(res, user._userId);
+    generateToken(res, user._id);
 
     res.status(201).json({
       status: "success",
@@ -71,21 +68,65 @@ const registerUser = asyncHandler(async (req, res) => {
 // route    POST /api/users/logout
 // @access  Public
 const logoutUser = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "Logout User" });
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    // new Date(0) means it expires right away
+    expires: new Date(0),
+  });
+
+  res.status(200).json({ status: "success", message: "User logged out!" });
 });
 
 // @desc    Get user profile
 // route    GET /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "Get user profile" });
+  const user = {
+    _id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+  };
+
+  res.status(200).json({
+    status: "success",
+    message: "User found!",
+    data: user,
+  });
 });
 
 // @desc    Update user profile
 // route    PUT /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "Update user profile" });
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.email = req.body.email || user.email;
+    user.name = req.body.name || user.name;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "User updated!",
+      data: {
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+      },
+    });
+  } else {
+    res.status(400);
+    throw new Error("User was not updated!");
+  }
+});
+
+const updateUserPassword = asyncHandler(async (req, res) => {
+  const newPassword = req.body.password;
 });
 
 export {
