@@ -1,26 +1,7 @@
-import { Container, Card, Button } from "react-bootstrap";
-
 function Hero() {
   return (
     <div className="py-5">
-      <Container className="d-flex justify-content-center">
-        <Card className="p-5 d-flex flex-column align-items-center her-card bg-light w-75">
-          <h1 className="text-center mb-4">MERN Authentication</h1>
-          <p className="text-center mb-4">
-            This is a biolerplate for MERN authentication that stores a JWT in
-            an HTTP-Only cookie. It also uses Redux Toolkit and React Bootstrap
-            library.
-          </p>
-          <div className="d-flex">
-            <Button variant="primary" href="/login" className="me-3">
-              Sign In
-            </Button>
-            <Button variant="secondary" href="/register">
-              Sign Up
-            </Button>
-          </div>
-        </Card>
-      </Container>
+      <div>hero</div>
     </div>
   );
 }

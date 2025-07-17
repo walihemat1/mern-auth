@@ -1,7 +1,7 @@
 import Hero from "../components/Hero";
 
-function HomeScreen() {
+function Home() {
   return <Hero />;
 }
 
-export default HomeScreen;
+export default Home;
